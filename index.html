@@ -52,12 +52,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/party.loader.js";
+      var loaderUrl = buildUrl + "/PartyGame_Local.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/party.data.unityweb",
-        frameworkUrl: buildUrl + "/party.framework.js.unityweb",
-        codeUrl: buildUrl + "/party.wasm.unityweb",
+        dataUrl: buildUrl + "/PartyGame_Local.data.unityweb",
+        frameworkUrl: buildUrl + "/PartyGame_Local.framework.js.unityweb",
+        codeUrl: buildUrl + "/PartyGame_Local.wasm.unityweb",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "DefaultCompany",
         productName: "Multiplayer Party",
@@ -104,37 +104,23 @@
 
       document.querySelector("#unity-loading-bar").style.display = "block";
 
-      function isMobileDevice() {
-      return /Mobi|Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
-  }
-
-      function checkDeviceAndSendToUnity(unityInstance) {
-      var isMobile = isMobileDevice();
-      unityInstance.SendMessage("GameManager", "OnDeviceCheckResult", isMobile ? "true" : "false");
-  }
-
-  // Unity 初始化後的部分
-  var script = document.createElement("script");
-  script.src = loaderUrl;
-  script.onload = () => {
-      createUnityInstance(canvas, config, (progress) => {
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
           document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
-      }).then((unityInstance) => {
-          document.querySelector("#unity-loading-bar").style.display = "none";
-          document.querySelector("#unity-fullscreen-button").onclick = () => {
-              unityInstance.SetFullscreen(1);
-          };
+              }).then((unityInstance) => {
+                document.querySelector("#unity-loading-bar").style.display = "none";
+                document.querySelector("#unity-fullscreen-button").onclick = () => {
+                  unityInstance.SetFullscreen(1);
+                };
 
-          // 呼叫檢查裝置的函數
-          checkDeviceAndSendToUnity(unityInstance);
+              }).catch((message) => {
+                alert(message);
+              });
+            };
 
-      }).catch((message) => {
-          alert(message);
-      });
-  };
       document.body.appendChild(script);
-
-
 
     </script>
   </body>
